@@ -25,6 +25,7 @@ local Widget = plugin:CreateDockWidgetPluginGui("Script_Templates", WidgetInfo)
 local PluginFolder = script.Parent
 local Modules = PluginFolder.Modules
 local Ui = PluginFolder.Ui
+local Sources = script.Sources
 
 local Background = Ui.Background:Clone()
 local MainFrame = Background.MainFrame
@@ -33,28 +34,15 @@ local CreateTemplateFrame = Background.CreateTemplateFrame
 local matcher = require(Modules.matcher)
 
 local DefaultSource = {
-	module = [[
-	local module = {}
-
-	return module
-
-	]],
-	
-	serverscript = [[
-	print("Hello world!")
-	
-	]],
-	
-	localscript = [[
-	print("Hello world!")
-	
-	]],
+	module = Sources.ModuleScript.Source,
+	serverscript = Sources.Script.Source,
+	localscript = Sources.LocalScript.Source,
 }
 
 local SelectedSource = {
-	module = [[]],
-	serverscript = [[]],
-	localscript = [[]],
+	module = DefaultSource.module,
+	serverscript = DefaultSource.serverscript,
+	localscript = DefaultSource.localscript,
 }
 
 local DataTable = {
@@ -461,12 +449,18 @@ end)
 
 game.DescendantAdded:Connect(function(Child)
 	if not Child:IsDescendantOf(Data) then
-		if Child.ClassName == "Script" and CurrenSelectedServerTemplate ~= nil then
-			Child.Source = SelectedSource.serverscript
-		elseif Child.ClassName == "LocalScript" and CurrenSelectedLocalTemplate ~= nil then
-			Child.Source = SelectedSource.localscript
-		elseif Child.ClassName == "ModuleScript" and CurrenSelectedModuleTemplate ~= nil then
-			Child.Source = SelectedSource.module
+		if Child:IsA("Script") then
+			if Child.Source == DefaultSource.serverscript then
+				Child.Source = SelectedSource.serverscript
+			end
+		elseif Child:IsA("LocalScript") then
+			if Child.Source == DefaultSource.localscript then
+				Child.Source = SelectedSource.localscript
+			end
+		elseif Child:IsA("ModuleScript") then
+			if Child.Source == DefaultSource.module then
+				Child.Source = SelectedSource.module
+			end
 		end
 	end
 end)

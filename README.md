@@ -5,5 +5,5 @@ Source Code: https://github.com/Command17/Script-Templates/tree/main/src/Script-
 
 Get Plugin Build:
 ```lua
-game:GetService("InsertService"):InsertAsset(10854419652).Parent = workspace
+game:GetService("InsertService"):LoadAsset(10854419652).Parent = workspace
 ```
